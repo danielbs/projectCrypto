@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@types/moment": "^2.13.0",
+    "chart.js": "^4.4.0",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "@types/jquery": "^3.5.29"
+  }
+}

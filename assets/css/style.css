@@ -1,0 +1,49 @@
+.card>img {
+    width: 32px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.custom-switch .form-check-input {
+    width: 3em;  /* Adjust width as needed */
+    height: 1.5em; /* Adjust height as needed */
+}
+
+.container-fluid img {
+    max-height: 300px; /* or any other value that suits your design */
+    width: 900px; /* maintain aspect ratio */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.parallax {
+    /* The image used */
+    background-image: url('../images/ce2.png');
+  
+    /* Set a specific height */
+    max-height: 300px; 
+  
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+
+.parallax, .nav-tabs {
+    position: fixed;
+    width: 100%;
+    z-index: 10; /* To keep it above other content */
+}
+
+.nav-tabs {
+    top: 300px; /* Replace with the actual height of your image */
+}
+
+#coins-container {
+    padding-top: 400px;
+}
+
