@@ -97,6 +97,6 @@ async function coinsFlexSwitchClicked(e: MouseEvent) {
     
     document.getElementById('live-reports-tab').addEventListener('click', () => {
         // Call the function or method when the tab is clicked
-        //startDataFetchAndUpdate();
+        startDataFetchAndUpdate();
     });
 })();

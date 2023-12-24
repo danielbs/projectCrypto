@@ -8,16 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 //import { Chart } from 'chart.js';
-import { coinsFlexSwitchSelected } from './state';
+import { coinsFlexSwitchSelected } from './state.js';
 // This function should be called when the "Live Reports" tab is selected
 export default function startDataFetchAndUpdate() {
     console.log('startDataFetchAndUpdate');
-    // setInterval(async () => {
-    //     for (let coinId of coinsFlexSwitchSelected) {
-    //         const data = await fetchDataForCoin(coinId);
-    //         updateChartForCoin(coinId, data);
-    //     }
-    // }, 20000); // Fetch data every 20 seconds
+    console.log(coinsFlexSwitchSelected);
+    setInterval(() => __awaiter(this, void 0, void 0, function* () {
+        for (let coinId of coinsFlexSwitchSelected) {
+            const data = yield fetchDataForCoin(coinId);
+            updatedChartForCoin(coinId, data);
+        }
+    }), 20000); // Fetch data every 20 seconds
 }
 function fetchDataForCoin(coinId) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -34,11 +35,41 @@ function fetchDataForCoin(coinId) {
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
         console.log($.data);
-        //const prices = $.data.Data.Data.map((item) => item.close);
-        const prices = 5;
+        //const prices = $.data.map((item) => item.close);
+        const prices = [1, 2, 3, 4, 5];
         console.log(prices);
         return prices;
         //return []; // Return an array of data points
+    });
+}
+function updatedChartForCoin(coinId, data) {
+    // // Check if a chart already exists for this coin
+    let chartContainer = $(`#chart-${coinId}`);
+    if (chartContainer.length === 0) {
+        // Create a new chart container if it doesn't exist
+        chartContainer = $(`<canvas id="chart-${coinId}" width="400" height="200"></canvas>`);
+        $('#charts-container').append(chartContainer);
+    }
+    const canvas = $(`#chart-${coinId}`)[0];
+    console.log(canvas);
+    const ctx = canvas.getContext('2d');
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+        existingChart.destroy();
+    }
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                    label: `Coin ${coinId}`,
+                    data: data,
+                    // You can add more styling options here
+                }]
+        },
+        options: {
+        // Chart options
+        }
     });
 }
 function updateChartForCoin(coinId, data) {
