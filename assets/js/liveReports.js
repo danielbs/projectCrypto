@@ -7,18 +7,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-//import { Chart } from 'chart.js';
 import { coinsFlexSwitchSelected } from './state.js';
+const savedCoins = [];
 // This function should be called when the "Live Reports" tab is selected
 export default function startDataFetchAndUpdate() {
     console.log('startDataFetchAndUpdate');
     console.log(coinsFlexSwitchSelected);
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         for (let coinId of coinsFlexSwitchSelected) {
-            const data = yield fetchDataForCoin(coinId);
-            updatedChartForCoin(coinId, data);
+            // const data = await fetchDataForCoin(coinId);
+            // updatedChartForCoin(coinId, data);
+            const coinData = yield fetchCoinData(coinId);
+            console.log(savedCoins);
+            if (!savedCoins[coinId]) {
+                savedCoins[coinId] = [];
+            }
+            if (savedCoins[coinId].length < 20) {
+                savedCoins[coinId].push([coinData]);
+            }
+            else {
+                savedCoins[coinId].shift();
+                savedCoins[coinId].push([coinData]);
+            }
+            console.log(savedCoins);
+            updatedChartForCoin(coinId, coinData);
         }
     }), 20000); // Fetch data every 20 seconds
+}
+function fetchCoinData(coinId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Replace this with your actual data fetching logic
+        //const response = await fetch('your-api-url/' + coinId);
+        //const data = await response.json();
+        const coinsString = coinsFlexSwitchSelected.join(',');
+        const apiKey = '716b9103ae80d88d17ccdc65ab359ce503523d7fb8a64509b408d3be0ad2d3a6';
+        //const response = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${coinId}&tsym=USD&limit=20&api_key=${apiKey}`);
+        const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${coinId}&tsyms=USD,EUR,ILS&api_key=${apiKey}`;
+        const response = yield fetch(url);
+        const data = yield response.json();
+        console.log(data);
+        const coinPrices = data[coinId.toUpperCase()]; // This will be like: { USD: 102.44, EUR: 93.36, ILS: 370.2 }
+        console.log("coinPrices:", coinPrices);
+        // Creating the ExtendedCoin object
+        const extendedCoin = {
+            id: coinId,
+            symbol: coinId,
+            name: coinId,
+            prices: {
+                USD: coinPrices.USD,
+                EUR: coinPrices.EUR,
+                ILS: coinPrices.ILS
+            }
+        };
+        console.log(extendedCoin);
+        return extendedCoin;
+    });
 }
 function fetchDataForCoin(coinId) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,57 +85,64 @@ function fetchDataForCoin(coinId) {
         //return []; // Return an array of data points
     });
 }
-function updatedChartForCoin(coinId, data) {
+function updatedChartForCoin(coinId, coinData) {
     // // Check if a chart already exists for this coin
     let chartContainer = $(`#chart-${coinId}`);
     if (chartContainer.length === 0) {
         // Create a new chart container if it doesn't exist
-        chartContainer = $(`<canvas id="chart-${coinId}" width="400" height="200"></canvas>`);
+        chartContainer = $(`<canvas id="chart-${coinId}" style="width:400px, height:200px"></canvas>`);
         $('#charts-container').append(chartContainer);
     }
     const canvas = $(`#chart-${coinId}`)[0];
-    console.log(canvas);
     const ctx = canvas.getContext('2d');
     const existingChart = Chart.getChart(ctx);
     if (existingChart) {
         existingChart.destroy();
     }
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                    label: `Coin ${coinId}`,
-                    data: data,
-                    // You can add more styling options here
-                }]
-        },
-        options: {
-        // Chart options
-        }
-    });
-}
-function updateChartForCoin(coinId, data) {
-    // Check if a chart already exists for this coin
-    let chartContainer = $(`#chart-${coinId}`);
-    if (chartContainer.length === 0) {
-        // Create a new chart container if it doesn't exist
-        chartContainer = $(`<canvas id="chart-${coinId}" width="400" height="200"></canvas>`);
-        $('#charts-container').append(chartContainer);
+    if (ctx) {
+        console.log("ctx:", ctx);
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['USD', 'EUR', 'ILS'],
+                datasets: [{
+                        label: 'USD',
+                        data: [coinData.prices.USD],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'EUR',
+                        data: [coinData.prices.EUR],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'ILS',
+                        data: [coinData.prices.ILS],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+            },
+            options: {}
+        });
+        console.log("chart:", chart);
     }
-    // Create or update the chart
-    new Chart(chartContainer[0], {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                    label: `Coin ${coinId}`,
-                    data: data,
-                    // You can add more styling options here
-                }]
-        },
-        options: {
-        // Chart options
-        }
-    });
+    else {
+        console.error('ctx is null');
+    }
+    // const chart = new Chart(ctx, {
+    //     type: 'line',
+    //     data: {
+    //         labels: [], // Array of labels for each data point, e.g., timestamps
+    //         datasets: [{
+    //             label: `Coin ${coinId}`,
+    //             data: data,
+    //             // You can add more styling options here
+    //         }]
+    //     },
+    //     options: {
+    //         // Chart options
+    //     }
+    // });
 }
