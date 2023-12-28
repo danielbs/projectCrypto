@@ -31,19 +31,40 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
-  
-
-.parallax, .nav-tabs {
-    position: fixed;
-    width: 100%;
-    z-index: 10; /* To keep it above other content */
-}
 
 .nav-tabs {
     top: 300px; /* Replace with the actual height of your image */
 }
 
-#coins-container {
-    padding-top: 400px;
+.search-container {
+    margin: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: right;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 3% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }

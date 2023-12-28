@@ -27,7 +27,7 @@ export default function startDataFetchAndUpdate() {
             console.log(savedCoins);
             
         }
-        updatedChartForCoin(savedCoins);
+        // updatedChartForCoin(savedCoins);
     }, 20000); // Fetch data every 20 seconds
 }
 
@@ -82,71 +82,71 @@ async function fetchDataForCoin(coinId) {
     //return []; // Return an array of data points
 }
 
-function updatedChartForCoin(savedCoins: ExtendedCoin[][]) {
-    // // Check if a chart already exists for this coin
-    let chartContainer = $(`#chart-${coinId}`);
-    if (chartContainer.length === 0) {
-        // Create a new chart container if it doesn't exist
-        chartContainer = $(`<canvas id="chart-${coinId}" style="width:400px, height:200px"></canvas>`);
-        $('#charts-container').append(chartContainer);
-    }
+// function updatedChartForCoin(savedCoins: ExtendedCoin[][]) {
+//     // // Check if a chart already exists for this coin
+//     let chartContainer = $(`#chart-${coinId}`);
+//     if (chartContainer.length === 0) {
+//         // Create a new chart container if it doesn't exist
+//         chartContainer = $(`<canvas id="chart-${coinId}" style="width:400px, height:200px"></canvas>`);
+//         $('#charts-container').append(chartContainer);
+//     }
 
-    const canvas = $(`#chart-${coinId}`)[0] as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
+//     const canvas = $(`#chart-${coinId}`)[0] as HTMLCanvasElement;
+//     const ctx = canvas.getContext('2d');
 
-    const existingChart = Chart.getChart(ctx);
-    if(existingChart) {
-        existingChart.destroy();
-    }
+//     const existingChart = Chart.getChart(ctx);
+//     if(existingChart) {
+//         existingChart.destroy();
+//     }
 
-    if (ctx) {
-        console.log("ctx:", ctx);
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['USD', 'EUR', 'ILS'], // Labels for the x-axis
-                datasets: [{
-                    label: 'USD', // Coin name
-                    data: [coinData.prices.USD], // Prices
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                },
-                {
-                    label: 'EUR', // Coin name
-                    data: [coinData.prices.EUR], // Prices
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                },
-                {
-                    label: 'ILS', // Coin name
-                    data: [coinData.prices.ILS], // Prices
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-             options: {
-            }
+//     if (ctx) {
+//         console.log("ctx:", ctx);
+//         const chart = new Chart(ctx, {
+//             type: 'line',
+//             data: {
+//                 labels: ['USD', 'EUR', 'ILS'], // Labels for the x-axis
+//                 datasets: [{
+//                     label: 'USD', // Coin name
+//                     data: [coinData.prices.USD], // Prices
+//                     borderColor: 'rgb(75, 192, 192)',
+//                     tension: 0.1
+//                 },
+//                 {
+//                     label: 'EUR', // Coin name
+//                     data: [coinData.prices.EUR], // Prices
+//                     borderColor: 'rgb(75, 192, 192)',
+//                     tension: 0.1
+//                 },
+//                 {
+//                     label: 'ILS', // Coin name
+//                     data: [coinData.prices.ILS], // Prices
+//                     borderColor: 'rgb(75, 192, 192)',
+//                     tension: 0.1
+//                 }]
+//             },
+//              options: {
+//             }
             
-        });
-        console.log("chart:", chart);
-    } else {
-        console.error('ctx is null');
-    }
+//         });
+//         console.log("chart:", chart);
+//     } else {
+//         console.error('ctx is null');
+//     }
 
-    // const chart = new Chart(ctx, {
-    //     type: 'line',
-    //     data: {
-    //         labels: [], // Array of labels for each data point, e.g., timestamps
-    //         datasets: [{
-    //             label: `Coin ${coinId}`,
-    //             data: data,
-    //             // You can add more styling options here
-    //         }]
-    //     },
-    //     options: {
-    //         // Chart options
-    //     }
-    // });
+//     // const chart = new Chart(ctx, {
+//     //     type: 'line',
+//     //     data: {
+//     //         labels: [], // Array of labels for each data point, e.g., timestamps
+//     //         datasets: [{
+//     //             label: `Coin ${coinId}`,
+//     //             data: data,
+//     //             // You can add more styling options here
+//     //         }]
+//     //     },
+//     //     options: {
+//     //         // Chart options
+//     //     }
+//     // });
 
-}
+// }
 
